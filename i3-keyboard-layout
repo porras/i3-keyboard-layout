@@ -3,7 +3,7 @@
 set -e
 
 get_kbdlayout() {
-  setxkbmap -query | grep -oP 'layout:\s*\K(\w{2})'
+  setxkbmap -query | grep -oP 'layout:\s*\K(\w+)'
 }
 
 set_kbdlayout() {
