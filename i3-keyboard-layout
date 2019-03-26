@@ -22,10 +22,13 @@ cycle() {
 }
 
 i3status() {
+  declare -A flags=( ["es"]="🇪🇸" ["us"]="🇺🇸")
+
   while :
   do
     read line
-    block="{\"full_text\":\"$(get_kbdlayout)\"}"
+	symbol=$(get_kbdlayout)
+	block="{\"full_text\":\"${flags[${symbol}]:-${symbol}}\"}"
     echo "${line/\[\{/\[$block,\{}"|| exit 1
   done
 }
