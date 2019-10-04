@@ -30,6 +30,8 @@ Each time you press that key, the next layout on the list will be selected.
 
 ## Display current layout
 
+**NOTE:** You can skip this part if you use some kind of tray indicator such as [sbxkb](https://www.archlinux.org/packages/community/x86_64/sbxkb/), which is probably what you want if you prefer a flag instead of the name of the layout.
+
 A subcommand is included to display the current layout on the `i3status` bar. On your bar configuration, you need to pipe `i3status` onto the `i3status` subcommand:
 
 
