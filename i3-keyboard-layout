@@ -3,16 +3,19 @@
 set -e
 
 get_kbdlayout() {
-  setxkbmap -query | grep -oP 'layout:\s*\K(\w+)'
+  layout=$(setxkbmap -query | grep -oP 'layout:\s*\K(\w+)')
+  variant=$(setxkbmap -query | grep -oP 'variant:\s*\K(\w+)')
+  echo "$layout" "$variant"
 }
 
 set_kbdlayout() {
-  setxkbmap "$1"
+  eval "array=($1)"
+  setxkbmap "${array[@]}"
   pgrep i3status | xargs --no-run-if-empty kill -s USR1 # tell i3status to update
 }
 
 cycle() {
-  current_layout=$(get_kbdlayout)
+  current_layout=$(get_kbdlayout | xargs)
   layouts=("$@" "$1") # add the first one at the end so that it cycles
   index=0
   while [ "${layouts[$index]}" != "$current_layout" ] && [ $index -lt "${#layouts[@]}" ]; do index=$[index +1]; done
