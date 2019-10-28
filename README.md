@@ -28,6 +28,14 @@ bindsym $mod+space exec path/to/i3-keyboard-layout cycle us es de
 
 Each time you press that key, the next layout on the list will be selected.
 
+If you want to use layouts with variants, you can use quotes, like this:
+
+```
+# ~/.config/i3/config
+
+bindsym $mod+space exec path/to/i3-keyboard-layout cycle us "us euro"
+```
+
 ## Display current layout
 
 **NOTE:** You can skip this part if you use some kind of tray indicator such as [sbxkb](https://www.archlinux.org/packages/community/x86_64/sbxkb/), which is probably what you want if you prefer a flag instead of the name of the layout.
