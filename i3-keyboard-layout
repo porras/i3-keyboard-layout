@@ -3,7 +3,7 @@
 set -e
 
 get_kbdlayout() {
-  layout=$(setxkbmap -query | grep -oP 'layout:\s*\K(\w+)')
+  layout=$(setxkbmap -query | grep -oP 'layout:\s*\K([\w,]+)')
   variant=$(setxkbmap -query | grep -oP 'variant:\s*\K(\w+)')
   echo "$layout" "$variant"
 }
