@@ -10,12 +10,14 @@ get_kbdlayout() {
 
 set_kbdlayout() {
   eval "array=($1)"
-  setxkbmap "${array[@]}"
+  layout="${array[@]/:/ }"
+  setxkbmap $layout
   pgrep i3status | xargs --no-run-if-empty kill -s USR1 # tell i3status to update
 }
 
 cycle() {
   current_layout=$(get_kbdlayout | xargs)
+  current_layout="${current_layout/ /:}"
   layouts=("$@" "$1") # add the first one at the end so that it cycles
   index=0
   while [ "${layouts[$index]}" != "$current_layout" ] && [ $index -lt "${#layouts[@]}" ]; do index=$[index +1]; done

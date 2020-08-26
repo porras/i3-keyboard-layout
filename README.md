@@ -15,6 +15,7 @@ Assign a keystroke in your [i3](https://i3wm.org/) configuration to switch to di
 
 bindsym $mod+z exec path/to/i3-keyboard-layout set us
 bindsym $mod+x exec path/to/i3-keyboard-layout set es
+bindsym $mod+x exec path/to/i3-keyboard-layout set de:neo
 ```
 
 Alternatively (or aditionally), you can use a single keystroke to cycle through a list of your most used layouts:
@@ -23,7 +24,7 @@ Alternatively (or aditionally), you can use a single keystroke to cycle through 
 ```
 # ~/.config/i3/config
 
-bindsym $mod+space exec path/to/i3-keyboard-layout cycle us es de
+bindsym $mod+space exec path/to/i3-keyboard-layout cycle us es de:neo
 ```
 
 Each time you press that key, the next layout on the list will be selected.
