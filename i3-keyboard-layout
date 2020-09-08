@@ -1,27 +1,15 @@
-#!/bin/bash
+#!/bin/sh
 
-set -e
-
-get_kbdlayout() {
-  layout=$(setxkbmap -query | grep -oP 'layout:\s*\K([\w,]+)')
-  variant=$(setxkbmap -query | grep -oP 'variant:\s*\K(\w+)')
-  echo "$layout" "$variant"
+get_kbdlayout() { # prints out keyboard layout in xx-variant format.
+  q="$(setxkbmap -query)"
+  variant="$(echo "$q" | grep -oP 'variant:\s*\K(\w+)')" && variant="-$variant"
+  echo "$(echo "$q" | grep -oP 'layout:\s*\K([\w,]+)')$variant"
 }
 
-set_kbdlayout() {
-  eval "array=($1)"
-  setxkbmap "${array[@]}"
+set_kbdlayout() { # accepts either the layout (xx) or layout and variant separated with a dash (xx-variant)
+  setxkbmap "$(echo "$1" | cut -d- -f1)" "$(echo "$1" | cut -s -d- -f2)"
   pgrep i3status | xargs --no-run-if-empty kill -s USR1 # tell i3status to update
-}
-
-cycle() {
-  current_layout=$(get_kbdlayout | xargs)
-  layouts=("$@" "$1") # add the first one at the end so that it cycles
-  index=0
-  while [ "${layouts[$index]}" != "$current_layout" ] && [ $index -lt "${#layouts[@]}" ]; do index=$[index +1]; done
-  next_index=$[index +1]
-  next_layout=${layouts[$next_index]}
-  set_kbdlayout "$next_layout"
+  # pkill -RTMIN+30 "${STATUSBAR:-dwmblocks}" # for most other statusbars (e.g: i3blocks or dwmblocks)
 }
 
 i3status() {
@@ -29,6 +17,7 @@ i3status() {
   do
     read line
     block="{\"full_text\":\"$(get_kbdlayout)\"}"
+    # FIXME make bash independent
     echo "${line/\[\{/\[$block,\{}"|| exit 1
   done
 }
@@ -38,16 +27,15 @@ shift || (echo "Please specify one of: get, set <layout>, cycle <layout1> <layou
 
 case $subcommand in
   "get")
-    echo -n $(get_kbdlayout)
+    get_kbdlayout
     ;;
   "set")
     set_kbdlayout "$1"
     ;;
   "cycle")
-    cycle "$@"
+    set_kbdlayout "$(echo "$@" | grep -oP ".*$(get_kbdlayout) +\\K[\\w-]+" || echo "$1")"
     ;;
   "i3status")
     i3status
     ;;
 esac
-
